@@ -17,6 +17,20 @@ CORS(app)
 # In-memory storage for active games
 GAMES = {}
 
+# Available strategies exposed to frontend
+AVAILABLE_STRATEGIES = {
+    "constructor": [
+        {"id": "maximin-threat", "name": "Maximin — maksymalizacja zagrożenia (domyślna)"},
+        {"id": "random", "name": "Ruchy Losowe"},
+        {"id": "alphabeta", "name": "Alpha-Beta (lookahead)"}
+    ],
+    "painter": [
+        {"id": "min-threat", "name": "Min — redukcja zagrożenia (domyślna)"},
+        {"id": "random", "name": "Losowy kolor"},
+        {"id": "alphabeta", "name": "Alpha-Beta (lookahead)"}
+    ]
+}
+
 def serialize_edge_list(edges):
     return [[u, v] for u, v in edges]
 
@@ -61,6 +75,12 @@ def format_game_state(game):
 def get_presets():
     return jsonify(PRESETS)
 
+
+@app.route("/api/strategies", methods=["GET"])
+def get_strategies():
+    """Return available strategies for constructor and painter so frontend can render choices dynamically."""
+    return jsonify(AVAILABLE_STRATEGIES)
+
 @app.route("/api/start_game", methods=["POST"])
 def start_game():
     data = request.json or {}
@@ -81,8 +101,8 @@ def start_game():
             
     player_constructor = data.get("player_constructor", "human")
     player_painter = data.get("player_painter", "human")
-    constructor_strategy = data.get("constructor_strategy", "heuristic")
-    painter_strategy = data.get("painter_strategy", "heuristic")
+    constructor_strategy = data.get("constructor_strategy", "maximin-threat")
+    painter_strategy = data.get("painter_strategy", "min-threat")
     
     # Pre-calculate subgraphs
     subgraphs_raw = find_subgraphs(n, h_vertices, h_edges)
@@ -270,8 +290,8 @@ def simulate():
             h_vertices = [0, 1, 2]
             h_edges = [(0, 1), (1, 2), (2, 0)]
             
-    constructor_strategy = data.get("constructor_strategy", "heuristic")
-    painter_strategy = data.get("painter_strategy", "heuristic")
+    constructor_strategy = data.get("constructor_strategy", "maximin-threat")
+    painter_strategy = data.get("painter_strategy", "min-threat")
     num_runs = int(data.get("num_runs", 10))
     
     subgraphs_raw = find_subgraphs(n, h_vertices, h_edges)
@@ -285,6 +305,7 @@ def simulate():
     
     num_runs = min(num_runs, 200)
     
+    runs_log_all = []
     for run in range(num_runs):
         E_Red = set()
         E_Blue = set()
@@ -318,6 +339,7 @@ def simulate():
             
         total_turns_list.append(turns)
         
+        # Append brief log for first 5 (backwards compatible)
         if run < 5:
             runs_log.append({
                 "run_index": run + 1,
@@ -327,6 +349,15 @@ def simulate():
                 "winning_subgraph": serialize_edge_list(win_sg) if win_sg else None,
                 "winning_color": win_c
             })
+        # Append full per-run entry to full log (no limit)
+        runs_log_all.append({
+            "run_index": run + 1,
+            "winner": winner,
+            "turns": turns,
+            "moves": game_moves,
+            "winning_subgraph": serialize_edge_list(win_sg) if win_sg else None,
+            "winning_color": win_c
+        })
             
     avg_turns = sum(total_turns_list) / len(total_turns_list) if total_turns_list else 0
     
@@ -341,7 +372,8 @@ def simulate():
         "constructor_win_rate": constructor_wins / num_runs if num_runs > 0 else 0,
         "painter_win_rate": painter_wins / num_runs if num_runs > 0 else 0,
         "avg_turns": avg_turns,
-        "runs_log": runs_log
+        "runs_log": runs_log,
+        "full_runs_log": runs_log_all
     })
 
 if __name__ == "__main__":

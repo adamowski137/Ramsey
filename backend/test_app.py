@@ -80,8 +80,8 @@ class RamseyGameTestCase(unittest.TestCase):
         response = self.app.post('/api/simulate', json={
             "n": 5,
             "h_type": "triangle",
-            "constructor_strategy": "heuristic",
-            "painter_strategy": "heuristic",
+            "constructor_strategy": "maximin-threat",
+            "painter_strategy": "min-threat",
             "num_runs": 5
         })
         self.assertEqual(response.status_code, 200)
