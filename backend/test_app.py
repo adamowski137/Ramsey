@@ -1,6 +1,7 @@
 import unittest
 import json
-from app import app, find_subgraphs, calculate_total_threat, check_game_over
+from app import app
+from game_logic import find_subgraphs, calculate_total_threat, check_game_over
 
 class RamseyGameTestCase(unittest.TestCase):
     def setUp(self):

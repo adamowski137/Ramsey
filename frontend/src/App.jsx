@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Play, 
   RotateCcw, 
@@ -17,40 +17,6 @@ import './App.css';
 
 const API_BASE = 'http://localhost:5000/api';
 
-// Fallback presets if backend is not reachable initially
-const FALLBACK_PRESETS = {
-  "triangle": {
-    "name": "Trójkąt (K3)",
-    "vertices": [0, 1, 2],
-    "edges": [[0, 1], [1, 2], [2, 0]],
-    "description": "Monochromatyczny trójkąt K3 (3 wierzchołki, 3 krawędzie)"
-  },
-  "clique4": {
-    "name": "Klika K4",
-    "vertices": [0, 1, 2, 3],
-    "edges": [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]],
-    "description": "Monochromatyczna klika K4 (4 wierzchołki, 6 krawędzi)"
-  },
-  "cycle4": {
-    "name": "Cykl C4",
-    "vertices": [0, 1, 2, 3],
-    "edges": [[0, 1], [1, 2], [2, 3], [3, 0]],
-    "description": "Monochromatyczny cykl C4 (4 wierzchołki, 4 krawędzie)"
-  },
-  "path4": {
-    "name": "Ścieżka P4",
-    "vertices": [0, 1, 2, 3],
-    "edges": [[0, 1], [1, 2], [2, 3]],
-    "description": "Monochromatyczna ścieżka P4 (4 wierzchołki, 3 krawędzie)"
-  },
-  "star4": {
-    "name": "Gwiazda K1,3",
-    "vertices": [0, 1, 2, 3],
-    "edges": [[0, 1], [0, 2], [0, 3]],
-    "description": "Monochromatyczna gwiazda K1,3 (4 wierzchołki, 3 krawędzie)"
-  }
-};
-
 function App() {
   // Config state
   const [n, setN] = useState(6);
@@ -62,7 +28,7 @@ function App() {
   const [painterStrategy, setPainterStrategy] = useState('heuristic');
   
   // Game & presets state
-  const [presets, setPresets] = useState(FALLBACK_PRESETS);
+  const [presets, setPresets] = useState({});
   const [gameState, setGameState] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [error, setError] = useState(null);
@@ -78,12 +44,19 @@ function App() {
   useEffect(() => {
     fetch(`${API_BASE}/presets`)
       .then(res => {
-        if (!res.ok) throw new Error("Backend connection issue");
+        if (!res.ok) throw new Error("Błąd pobierania konfiguracji z serwera");
         return res.json();
       })
-      .then(data => setPresets(data))
+      .then(data => {
+        setPresets(data);
+        const keys = Object.keys(data);
+        if (keys.length > 0 && !keys.includes(hType) && hType !== 'custom') {
+          setHType(keys[0]);
+        }
+      })
       .catch(err => {
-        console.warn("Using fallback presets, backend not available yet", err);
+        console.error("Backend error: presets fetching failed", err);
+        setError("Brak połączenia z serwerem. Uruchom backend, aby załadować grafy celu H.");
       });
   }, []);
 
@@ -98,7 +71,7 @@ function App() {
         description: `Niestandardowy graf H z ${uniqueVertices.length} wierzchołkami i ${parsedEdges.length} krawędziami`
       };
     }
-    return presets[hType] || FALLBACK_PRESETS[hType];
+    return presets[hType] || { name: "", vertices: [], edges: [], description: "" };
   };
 
   const parseCustomEdges = (text) => {
@@ -329,15 +302,9 @@ function App() {
     return gameState.winning_subgraph.flat().includes(nodeIndex);
   };
 
-  const isEdgeConnected = (u, v, node) => {
-    return (u === node || v === node);
-  };
-
-  // Render SVG Elements
   const renderSVGBoard = () => {
     const totalNodes = gameState ? gameState.n : n;
     const activeEdges = gameState ? gameState.edges : [];
-    const lastDrawn = gameState ? gameState.last_drawn_edge : null;
 
     const allPossible = getAllPossibleEdges(totalNodes);
 
@@ -574,11 +541,11 @@ function App() {
               <div className="form-field">
                 <label>Graf Celu (H)</label>
                 <select value={hType} onChange={(e) => setHType(e.target.value)}>
-                  <option value="triangle">Trójkąt (K3)</option>
-                  <option value="clique4">Klika (K4) - Trudne!</option>
-                  <option value="cycle4">Cykl (C4)</option>
-                  <option value="path4">Ścieżka (P4)</option>
-                  <option value="star4">Gwiazda (K1,3)</option>
+                  {Object.entries(presets).map(([key, preset]) => (
+                    <option key={key} value={key}>
+                      {preset.name}
+                    </option>
+                  ))}
                   <option value="custom">Własne krawędzie...</option>
                 </select>
               </div>
