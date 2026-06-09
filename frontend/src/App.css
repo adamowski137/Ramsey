@@ -1,0 +1,640 @@
+/* App styling for Ramsey Game */
+
+/* Logo and Header */
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-text {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-family: var(--font-secondary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Sidebar & Form Controls */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-field select, 
+.form-field input {
+  background: rgba(15, 19, 34, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.form-field select:focus, 
+.form-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.custom-h-input-wrapper {
+  margin-top: 0.25rem;
+}
+
+.custom-h-desc {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  width: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.45);
+  filter: brightness(1.1);
+}
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-color);
+  color: var(--color-text-primary);
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+.btn-danger:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+/* Main Area - Game / Simulation Board */
+.main-board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-banner {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.info-banner.constructor-turn {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-left: 4px solid var(--accent);
+}
+
+.info-banner.painter-turn {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-left: 4px solid #f59e0b;
+}
+
+.info-banner.finished-turn {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-left: 4px solid #10b981;
+}
+
+.turn-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.turn-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.board-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 480px;
+  position: relative;
+}
+
+/* SVG Graph Elements */
+.svg-wrapper {
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover circle {
+  stroke: var(--accent);
+  stroke-width: 3px;
+  fill: rgba(99, 102, 241, 0.15);
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.node circle {
+  fill: #141a2e;
+  stroke: var(--color-text-secondary);
+  stroke-width: 2px;
+  transition: all var(--transition-fast);
+}
+
+.node.selected circle {
+  stroke: var(--accent);
+  stroke-width: 3px;
+  fill: rgba(99, 102, 241, 0.2);
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+
+.node.winning circle {
+  stroke: #10b981;
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+}
+
+.node-text {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 14px;
+  fill: var(--color-text-primary);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+/* Edge Lines */
+.edge {
+  transition: all var(--transition-normal);
+}
+
+.edge-potential {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 2px;
+  stroke-dasharray: 4 6;
+  cursor: pointer;
+}
+
+.edge-potential:hover {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 4px;
+  stroke-dasharray: none;
+}
+
+.edge-red {
+  stroke: var(--color-red);
+  stroke-width: 4px;
+  filter: drop-shadow(0 0 2px var(--color-red-glow));
+}
+
+.edge-blue {
+  stroke: var(--color-blue);
+  stroke-width: 4px;
+  filter: drop-shadow(0 0 2px var(--color-blue-glow));
+}
+
+.edge-draft {
+  stroke: #f59e0b;
+  stroke-width: 4px;
+  stroke-dasharray: 6 4;
+  animation: dash 1s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5));
+}
+
+.edge-winning-red {
+  stroke: var(--color-red);
+  stroke-width: 8px;
+  filter: drop-shadow(0 0 10px var(--color-red));
+  stroke-linecap: round;
+}
+
+.edge-winning-blue {
+  stroke: var(--color-blue);
+  stroke-width: 8px;
+  filter: drop-shadow(0 0 10px var(--color-blue));
+  stroke-linecap: round;
+}
+
+/* Side Legend / Target Graph H Preview */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.legend-card {
+  padding: 1.25rem;
+}
+
+.legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.color-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.color-indicator.red {
+  background: var(--color-red);
+  box-shadow: 0 0 6px var(--color-red-glow);
+}
+
+.color-indicator.blue {
+  background: var(--color-blue);
+  box-shadow: 0 0 6px var(--color-blue-glow);
+}
+
+.color-indicator.draft {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.color-indicator.potential {
+  border: 1.5px dashed rgba(255, 255, 255, 0.4);
+}
+
+.target-preview-box {
+  background: rgba(15, 19, 34, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* Painter Action Panel */
+.painter-action-overlay {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border: 1.5px solid rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.painter-action-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  color: #f59e0b;
+}
+
+.painter-btn-group {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.btn-painter-red {
+  background: linear-gradient(135deg, var(--color-red) 0%, #b91c1c 100%);
+  color: white;
+  box-shadow: 0 4px 12px var(--color-red-glow);
+}
+.btn-painter-red:hover {
+  box-shadow: 0 6px 18px rgba(255, 75, 92, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-painter-blue {
+  background: linear-gradient(135deg, var(--color-blue) 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 4px 12px var(--color-blue-glow);
+}
+.btn-painter-blue:hover {
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Simulation Dashboard */
+.sim-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-val {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-val.constructor {
+  color: var(--accent);
+}
+
+.stat-val.painter {
+  color: #10b981;
+}
+
+.stat-lbl {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.stat-progress-bar {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.stat-progress {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+.stat-progress.painter {
+  background: #10b981;
+}
+
+/* Simulation Log and Detailed Run view */
+.sim-results-card {
+  padding: 1.5rem;
+}
+
+.sim-runs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sim-run-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: rgba(15, 19, 34, 0.4);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sim-run-row:hover {
+  background: rgba(28, 36, 62, 0.6);
+  border-color: var(--border-color-glow);
+  transform: translateX(2px);
+}
+
+.sim-run-row.active-row {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.run-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.run-badge.constructor {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.run-badge.painter {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.run-info-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.run-meta {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+/* Run Detail Modal or Drawer */
+.run-detail-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: rgba(10, 14, 27, 0.8);
+  border: 1px solid var(--border-color);
+}
+
+.run-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.detail-moves-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.75rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.25rem;
+}
+
+.detail-move-card {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-move-num {
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.detail-move-val {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.detail-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.detail-color-dot.red {
+  background: var(--color-red);
+}
+
+.detail-color-dot.blue {
+  background: var(--color-blue);
+}
+
+/* Instructions / Rules Box */
+.rules-card {
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  padding-left: 1rem;
+}
+
+/* Winning Subgraph Highlight Text */
+.winning-highlight-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
